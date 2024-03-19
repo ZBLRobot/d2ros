@@ -26,3 +26,10 @@
   * 3、sudo apt install build-essential
   * 4、sudo apt install texlive-latex-extra texlive-extra-utils texlive-xetex texlive-lang-chinese
   * 5、进一步设置和使用请参考：https://book.d2l.ai/
+
+使用Jupyter编辑markdown
+
+  * pip install mu-notedown
+  * 生成配置文件：jupyter notebook --generate-config
+  * 编辑配置文件并添加：c.NotebookApp.contents_manager_class = 'notedown.NotedownContentsManager'
+  * 重启jupyter：jupyter notebook
