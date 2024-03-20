@@ -17,7 +17,6 @@
   * 2、bash Miniconda3-py310_24.1.2-0-Linux-x86_64.sh；bash
   * 3、conda update conda；conda update pip
   * 4、pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
-  * 5、pip install numpy scipy matplotlib pandas ipython jupyterlab cython
 
 安装D2L Book
 
