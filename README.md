@@ -28,7 +28,6 @@
 
 使用Jupyter编辑markdown
 
-  * pip install mu-notedown
-  * 生成配置文件：jupyter notebook --generate-config
-  * 编辑配置文件并添加：c.NotebookApp.contents_manager_class = 'notedown.NotedownContentsManager'
-  * 重启jupyter：jupyter notebook
+  * pip install jupytext
+  * 重启jupyter：jupyter lab
+  * 新建：Jupytext->MyST Markdown文件
