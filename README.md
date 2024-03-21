@@ -31,3 +31,13 @@
   * pip install jupytext
   * 重启jupyter：jupyter lab
   * 新建：Jupytext->MyST Markdown文件
+
+安装字体
+
+  * sudo apt install fonts-freefont-otf
+  * cd /usr/share/fonts/opentype/
+  * sudo mkdir d2l-book
+  * cd d2l-book
+  * sudo cp /path/to/your/fonts/*.otf .
+  * sudo chmod 644 *.otf
+  * sudo fc-cache -fv
