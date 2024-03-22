@@ -21,23 +21,24 @@
 安装D2L Book
 
   * 1、pip install git+https://github.com/d2l-ai/d2l-book
-  * 2、conda install pandoc；conda install librsvg
-  * 3、sudo apt install build-essential
-  * 4、sudo apt install texlive-latex-extra texlive-extra-utils texlive-xetex texlive-lang-chinese
-  * 5、进一步设置和使用请参考：https://book.d2l.ai/
+  * 2、conda install conda-forge::pandoc
+  * 3、conda install librsvg
+  * 4、sudo apt install build-essential
+  * 5、sudo apt install texlive-latex-extra texlive-extra-utils texlive-xetex texlive-lang-chinese
+  * 6、进一步设置和使用请参考：https://book.d2l.ai/
 
 使用Jupyter编辑markdown
 
-  * pip install jupytext
-  * 重启jupyter：jupyter lab
-  * 新建：Jupytext->MyST Markdown文件
+  * 1、pip install jupytext
+  * 2、重启jupyter：jupyter lab
+  * 3、新建：Jupytext->MyST Markdown文件
 
 安装字体
 
-  * sudo apt install fonts-freefont-otf
-  * cd /usr/share/fonts/opentype/
-  * sudo mkdir d2l-book
-  * cd d2l-book
-  * sudo cp /path/to/your/fonts/*.otf .
-  * sudo chmod 644 *.otf
-  * sudo fc-cache -fv
+  * 1、sudo apt install fonts-freefont-otf
+  * 2、cd /usr/share/fonts/opentype/
+  * 3、sudo mkdir d2l-book
+  * 4、cd d2l-book
+  * 5、sudo cp /path/to/your/fonts/*.otf .
+  * 6、sudo chmod 644 *.otf
+  * 7、sudo fc-cache -fv
