@@ -23,7 +23,7 @@ ROS 最初由 Keenan Wyrobek 和 Eric Berger 在斯坦福大学期间发起，�
 
 这一想法在当时并不新鲜。实际上，在当时，机器人社区已经很多类似的框架。其中，Player/Stage 是在开源领域最著名的项目之一，而在专有系统领域则有 URBI。甚至索尼为Aibo 机器人开发的 Open-R 系统，也是为了解决这个问题而创建的。ros通过开源的方式，建立了庞大的用户社区，使他们从一系列通用框架中脱颖而出，成为机器人开发的通用解决方案。
 
-他们通过“机器人界的linux”这一概念，筹集到了5美金的资金。基于此，他们构建了Personal Robot PR-1作为硬件原型，并开始利用它开发软件，软件开发过程中他们借鉴了斯坦福大学Morgan Quigley的switchyard 系统。区别于主流机器人①仿人机器人研究平台humanoid robot research platforms，②机械臂和夹具试验台robot arm-and-gripper test beds两种设计理念，Keenan他们使用轮子代替机械腿，并构建机械臂，使其可以在人类工作环境完成相应任务。然而，他们意识到，为了构建一个真正通用的系统并向研究小组提供这些机器人，他们需要额外的资金。
+他们通过“机器人界的linux”这一概念，筹集到了5万美金的资金。基于此，他们构建了Personal Robot PR-1作为硬件原型，并开始利用它开发软件，软件开发过程中他们借鉴了斯坦福大学Morgan Quigley的switchyard 系统。区别于主流机器人①仿人机器人研究平台humanoid robot research platforms，②机械臂和夹具试验台robot arm-and-gripper test beds两种设计理念，Keenan他们使用轮子代替机械腿，并构建机械臂，使其可以在人类工作环境完成相应任务。然而，他们意识到，为了构建一个真正通用的系统并向研究小组提供这些机器人，他们需要额外的资金。
 
 ![pr1机器人](pic/pr1.png)
 
