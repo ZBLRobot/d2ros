@@ -1,4 +1,4 @@
-# 数字孪生
+# 机器人运动学
 :label:`chap_kinematics`
 
 讲机器人运动学
