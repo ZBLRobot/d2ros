@@ -70,6 +70,8 @@ ROS 2提供了多种软件包的安装组合，包括：
   * 基本安装（裸机），包括：通信库、消息包、命令行工具。没有GUI工具。
   * 仅开发工具，包括：用于构建ROS包的编译器和其他工具。
 
+运行相应的命令进行安装：
+
 ```bash
 sudo apt install ros-humble-desktop
 # sudo apt install ros-humble-ros-base
