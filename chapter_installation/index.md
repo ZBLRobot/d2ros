@@ -59,6 +59,11 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-a
 sudo apt update
 ```
 
+查看/etc/apt/sources.list.d/ros2.list文件中内容，如果已经写入以下信息，则添加存储库成功
+```bash
+deb [arch=amd64 signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu jammy main
+```
+
 ROS 2提供了多种软件包的安装组合，包括：
 
   * 桌面安装（推荐），包括：ROS，RViz，演示，教程。
