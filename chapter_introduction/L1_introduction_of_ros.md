@@ -25,7 +25,7 @@ ROS 最初由 Keenan Wyrobek 和 Eric Berger 在斯坦福大学期间发起，�
 
 他们通过“机器人界的linux”这一概念，筹集到了5美金的资金。基于此，他们构建了Personal Robot PR-1作为硬件原型，并开始利用它开发软件，软件开发过程中他们借鉴了斯坦福大学Morgan Quigley的switchyard 系统。区别于主流机器人①仿人机器人研究平台humanoid robot research platforms，②机械臂和夹具试验台robot arm-and-gripper test beds两种设计理念，Keenan他们使用轮子代替机械腿，并构建机械臂，使其可以在人类工作环境完成相应任务。然而，他们意识到，为了构建一个真正通用的系统并向研究小组提供这些机器人，他们需要额外的资金。
 
-![pr1机器人](/pic/pr1.png)
+![pr1机器人](pic/pr1.png)
 
 2008 年左右的某个时候，Keenan和Eric 会见了Scott Hassan，他是Willow Garage的投资者和创始人，该研究中心专注于机器人产品。Scott 发现他们的想法非常有趣，并资助了他们400万美金，在 Willow Garage 内启动个人机器人项目。ros: robot operating system诞生了，PR2 机器人也随之诞生。
 
@@ -33,7 +33,7 @@ ROS不是传统意义上的流程管理和调度的操作系统；相反，它�
 
 #### 1.2 willow garage时期 & open robotics时期
 
-![时间线](/pic/history.png)
+![时间线](pic/history.png)
 
 **2010年 ros 1.0 发布**：第一个官方 ROS 发行版：ROS Box Turtle 于 2010 年 3 月 2 日发布，标志着 ROS 首次以一组版本化的软件包正式发布供公众使用。这些发展催生了第一架运行 ROS 的无人机，第一辆运行 ROS 的自动驾驶汽车，以及乐高Mindstorms的 ROS 改编。
 
