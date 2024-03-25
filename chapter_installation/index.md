@@ -52,6 +52,8 @@ sudo apt install curl
 sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
 ```
 
+注意，如果无法访问“raw.githubusercontent.com”，请将DNS修改为``8.8.8.8``，并再次尝试。
+
 然后将存储库添加到软件源列表中，并更新软件源。
 
 ```bash

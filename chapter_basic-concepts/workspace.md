@@ -219,3 +219,32 @@ ros2 run turtlesim turtle_teleop_key --ros-args --remap turtle1/cmd_vel:=turtle2
 :label:`fig_turtlesim_remap`
 
 要停止模拟，可以在turtlesim_node终端中输入``Ctrl+C``，在turtle_teleop_key终端中输入``q``。
+
+## 同时运行多个节点
+
+使用``ros2 run``，需要为运行的每个新节点打开新的终端。当创建越来越多节点，同时运行更复杂的系统时，打开终端和重新输入配置细节会变得乏味。通过launch文件可以同时启动和配置包含不同ROS 2节点的多个可执行文件。使用``ros2 launch``命令运行一个launch文件将同时启动整个系统————所有节点及其配置。
+
+打开一个新终端并运行：
+
+```bash
+ros2 launch turtlesim multisim.launch.py
+```
+
+此命令将运行以下启动文件：
+
+```python
+# turtlesim/launch/multisim.launch.py
+ 
+from launch import LaunchDescription
+import launch_ros.actions
+ 
+def generate_launch_description():
+    return LaunchDescription([
+        launch_ros.actions.Node(
+            namespace= "turtlesim1", package='turtlesim', executable='turtlesim_node', output='screen'),
+        launch_ros.actions.Node(
+            namespace= "turtlesim2", package='turtlesim', executable='turtlesim_node', output='screen'),
+    ])
+```
+
+上面的启动文件是用Python编写的，但也可以使用XML和YAML来创建启动文件。该启动文件同时启动了两个turtlesim节点。
