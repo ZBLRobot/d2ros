@@ -105,7 +105,7 @@ printenv | grep -i ROS
 
 **确认安装成功**
 
-如果你安装的是ros-humble-desktop，你可以尝试一些例子。
+如果之前安装的是ros-humble-desktop，这里可以尝试一些例子。
 
 在一个终端中运行C++ talker：
 
@@ -119,7 +119,7 @@ ros2 run demo_nodes_cpp talker
 ros2 run demo_nodes_py listener
 ```
 
-你应该看到talker输出发布的消息，而listener输出收到的消息。这将验证C++和Python API是否正常工作。
+应该可以看到talker输出发布的消息，而listener输出收到的消息。这将验证C++和Python API是否正常工作。
 
 考虑到运行ROS 2的程序通常需要用到多个终端窗口，建议安装terminator。
 
@@ -127,7 +127,7 @@ ros2 run demo_nodes_py listener
 sudo apt install terminator
 ```
 
-安装后再次打开终端，你可以试试Contrl+Shift+E（垂直分割窗口），和Control+Shift+O（水平分割窗口）。
+安装后再次打开终端，尝试一下快捷键Contrl+Shift+E（垂直分割窗口），和Control+Shift+O（水平分割窗口）。
 
 **为开发做准备**
 
@@ -161,7 +161,7 @@ echo "export _colcon_cd_root=/opt/ros/humble/" >> ~/.bashrc
 echo "source /home/<current_user>/miniconda3/share/colcon_argcomplete/hook/colcon-argcomplete.bash" >> ~/.bashrc
 ```
 
-注意，需要将上面命令行中的<current_user>更换为自己系统的当前用户名。
+注意，需要将上面命令行中的``<current_user>``更换为自己系统的当前用户名。
 
 开发环境对开发效率有很大的影响，我们推荐使用VSCode来做ROS 2开发。访问VSCode的官网（https://code.visualstudio.com/），下载合适的安装包进行安装。
 
@@ -224,3 +224,5 @@ Host remote-ros2
 ```
 
 7、重新打开VSCode并尝试使用Remote-SSH扩展连接远端机器
+
+注意，需要将上面命令行中的``<remote-ip>``更换为远端计算机的IP地址，``<username>``更换为远端计算机的用户名，``<local-username>``更换为本地计算机的用户名。
