@@ -263,8 +263,8 @@ if __name__ == '__main__':
 最后，在实际构建工作空间并启动节点之前，还需要声明新节点的依赖关系，即用于执行它的库。新节点的源代码中使用了rclpy和std_msgs包，因此需要在包``pkg_py_example``根目录中的package.xml文件中声明这些依赖关系。在``<test_depend>``之前添加如下内容并保存：
 
 ```xml
-  <depend>rclpy</depend>
-  <depend>std_msgs</depend>
+<depend>rclpy</depend>
+<depend>std_msgs</depend>
 ```
 
 现在可以构建工作空间并执行新建的节点了。
@@ -318,64 +318,64 @@ ros2 topic hz /chatter
 
 导航到``~/ros2_ws/src``，利用之前创建的包``pkg_cpp_example``来实现相关功能。
 
-按照惯例，ROS 2的C++包中，C++的函数和类的声明头文件位于include目录中与包同名的子目录中。C++源文件，即实现函数和类的行为的C++代码位于src目录中。
+按照惯例，ROS 2的C++包中，C++的函数和类的声明头文件位于include目录中与包同名的子目录中。C++源文件，即实现函数和类的行为的C++代码，位于src目录中。
 
 在src目录中，新建一个名为simple_publisher.cpp的文件，添加如下内容，并保存。
 
 ```cpp
-#include <rclcpp/rclcpp.hpp>  // 引入ROS2客户端库的核心头文件
-#include <std_msgs/msg/string.hpp>  // 引入标准消息包std_msgs中String消息类型的头文件
+#include <rclcpp/rclcpp.hpp>       // 引入ROS2客户端库的核心头文件
+#include <std_msgs/msg/string.hpp> // 引入std_msgs中String消息类型的头文件
 
-#include <chrono>  // 引入chrono库，用于处理时间相关的功能
+#include <chrono> // 引入chrono库，用于处理时间相关的功能
 
-using namespace std::chrono_literals;  // 允许使用后缀"s"来表示秒
+using namespace std::chrono_literals; // 允许使用后缀"s"来表示秒
 
 // 定义一个SimplePublisher类，继承自rclcpp::Node
 class SimplePublisher : public rclcpp::Node
 {
 public:
-  SimplePublisher() : Node("simple_publisher"), counter_(0)  // 构造函数，初始化节点名称和计数器
-  {
-    // 创建一个发布者，发布std_msgs::msg::String类型的消息到"chatter"话题，消息队列长度为10
-    pub_ = create_publisher<std_msgs::msg::String>("chatter", 10);
-    // 创建一个定时器，每秒调用一次timerCallback函数
-    timer_ = create_wall_timer(1s, std::bind(&SimplePublisher::timerCallback, this));
-    // 输出日志信息，表示发布频率为1Hz
-    RCLCPP_INFO(get_logger(), "Publishing at 1 Hz");
-  }
+    SimplePublisher() : Node("simple_publisher"), counter_(0) // 构造函数，初始化节点名称和计数器
+    {
+        // 创建一个发布者，发布std_msgs::msg::String类型的消息到"chatter"话题，消息队列长度为10
+        pub_ = create_publisher<std_msgs::msg::String>("chatter", 10);
+        // 创建一个定时器，每秒调用一次timerCallback函数
+        timer_ = create_wall_timer(1s, std::bind(&SimplePublisher::timerCallback, this));
+        // 输出日志信息，表示发布频率为1Hz
+        RCLCPP_INFO(get_logger(), "Publishing at 1 Hz");
+    }
 
-  // 定时器回调函数，当定时器触发时调用
-  void timerCallback()
-  {
-    auto message = std_msgs::msg::String();  // 创建一个String类型的消息
-    // 设置消息内容为"Hello ROS 2 - counter:"加上计数器的值，并将计数器递增
-    message.data = "Hello ROS 2 - counter:" + std::to_string(counter_++);
-    // 发布消息
-    pub_->publish(message);
-  }
+    // 定时器回调函数，当定时器触发时调用
+    void timerCallback()
+    {
+        auto message = std_msgs::msg::String(); // 创建一个String类型的消息
+        // 设置消息内容为"Hello ROS 2 - counter:"加上计数器的值，并将计数器递增
+        message.data = "Hello ROS 2 - counter:" + std::to_string(counter_++);
+        // 发布消息
+        pub_->publish(message);
+    }
 
 private:
-  // 创建一个std_msgs::msg::String类型的发布者共享指针
-  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr pub_;
-  // 创建一个定时器共享指针
-  rclcpp::TimerBase::SharedPtr timer_;
-  // 创建一个无符号整型计数器
-  unsigned int counter_;
+    // 创建一个std_msgs::msg::String类型的发布者共享指针
+    rclcpp::Publisher<std_msgs::msg::String>::SharedPtr pub_;
+    // 创建一个定时器共享指针
+    rclcpp::TimerBase::SharedPtr timer_;
+    // 创建一个无符号整型计数器
+    unsigned int counter_;
 };
 
 // main函数，程序的入口点
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
-  // 初始化ROS2客户端库
-  rclcpp::init(argc, argv);
-  // 创建SimplePublisher节点的一个共享指针实例
-  auto node = std::make_shared<SimplePublisher>();
-  // 进入事件循环，等待回调函数执行
-  rclcpp::spin(node);
-  // 关闭ROS2客户端库
-  rclcpp::shutdown();
-  // 返回0，表示程序正常退出
-  return 0;
+    // 初始化ROS2客户端库
+    rclcpp::init(argc, argv);
+    // 创建SimplePublisher节点的一个共享指针实例
+    auto node = std::make_shared<SimplePublisher>();
+    // 进入事件循环，等待回调函数执行
+    rclcpp::spin(node);
+    // 关闭ROS2客户端库
+    rclcpp::shutdown();
+    // 返回0，表示程序正常退出
+    return 0;
 }
 ```
 
@@ -407,8 +407,8 @@ install(TARGETS
 最后，还需要在package.xml中再次声明依赖关系。在``<test_depend>``之前添加如下内容并保存：
 
 ```xml
-  <depend>rclcpp</depend>
-  <depend>std_msgs</depend>
+<depend>rclcpp</depend>
+<depend>std_msgs</depend>
 ```
 
 现在可以构建工作空间并执行新建的节点了。
@@ -455,4 +455,168 @@ data: 'Hello ROS 2 - counter: 33'
 ros2 topic info /chatter --verbose
 ros2 topic hz /chatter
 ```
+
+## 编程实现话题的订阅
+
+**使用Python实现**
+
+以下步骤将使用Python实现一个使用发布者-订阅者通信协议的订阅者节点，以接收并订阅一个话题，并读取通过它发布的消息。导航到``~/ros2_ws/src``，进入之前创建的包``pkg_py_example``的目录。
+
+在与包名同名的子目录中创建文件simple_subscriber.py，并添加如下内容：
+
+```python
+import rclpy  # 导入rclpy库，这是Python的ROS2客户端库
+from rclpy.node import Node  # 从rclpy.node模块中导入Node类，用于创建节点
+from std_msgs.msg import String  # 从std_msgs.msg模块中导入String消息类型，用于发布和订阅字符串消息
+
+# 定义一个SimpleSubscriber类，继承自Node类
+class SimpleSubscriber(Node):
+
+    def __init__(self):
+        super().__init__("simple_subscriber")  # 调用父类Node的构造函数，创建一个名为"simple_subscriber"的节点
+        self.sub_ = self.create_subscription(String, "chatter", self.msgCallback, 10)  # 创建一个订阅者，订阅名为"chatter"的话题，消息类型为String，回调函数为msgCallback，队列长度为10
+
+    # 定义一个msgCallback方法，用于处理接收到的消息
+    def msgCallback(self, msg):
+        self.get_logger().info("I heard: %s" % msg.data)  # 使用get_logger方法获取日志记录器，并打印接收到的消息内容
+
+# 定义一个main函数，作为程序的入口点
+def main():
+    rclpy.init()  # 初始化rclpy库
+
+    simple_publisher = SimpleSubscriber()  # 创建一个SimpleSubscriber对象
+    rclpy.spin(simple_publisher)  # 进入事件循环，处理节点上的回调函数
+
+    simple_publisher.destroy_node()  # 销毁节点
+    rclpy.shutdown()  # 关闭rclpy库
+
+# 检查是否为主程序，如果是则运行main函数
+if __name__ == '__main__':
+    main()
+```
+
+与之前的步骤类似，为了正确构建脚本，还需要在setup.py文件中的entry_points部分添加新的可执行文件声明。声明一个名为simple_subscriber的可执行文件，具体如下：
+
+```python
+    entry_points={
+        'console_scripts': [
+            'simple_publisher = pkg_py_example.simple_publisher:main',
+            'simple_subscriber = pkg_py_example.simple_subscriber:main',
+        ],
+    },
+```
+
+由于没有增加额外的依赖项，因此这里不需要修改package.xml文件。
+
+现在可以构建工作空间并执行新建的节点了。
+
+打开一个新的终端，进入工作空间，运行：
+
+```bash
+colcon build
+```
+
+在运行新节点的可执行程序之前，首先需要source当前工作空间：
+
+```bash
+. install/setup.bash
+```
+
+运行节点中的可执行程序：
+
+```bash
+ros2 run pkg_py_example simple_subscriber
+```
+
+此时，终端中并没有任何输出。
+
+打开一个新的终端，运行：
+
+```bash
+ros2 topic list
+```
+
+可以看到``/chatter``话题是存在的。
+
+如果手动向这个话题发布数据：
+
+```bash
+ros2 topic pub /chatter std_msgs/msg/String "data: 'Hello ROS 2'"
+```
+
+可以看到当前终端正在以1Hz，向``/chatter``话题发送字符串。
+
+切换回运行simple_subscriber的终端，可以看到该终端正在以1Hz，输出收到的字符串消息。
+
+保持simple_subscriber运行，停止手动话题的发送。
+
+打开一个新的终端，并source当前工作空间，运行C++实现的发布者程序。
+
+```bash
+ros2 run pkg_cpp_example simple_publisher
+```
+
+可以看到，simple_subscriber运行的终端打印出了它收到的所有消息。ROS 2的优点在于，它使得使用不同编程语言开发的执行不同操作的节点之间的通信成为可能，基本上不需要开发者为此付出任何努力。
+
+**使用C++实现**
+
+导航到``~/ros2_ws/src``，利用之前创建的包``pkg_cpp_example``来实现相关功能。
+
+在src目录中新建文件simple_subscriber.cpp，并添加以下内容：
+
+```cpp
+#include <rclcpp/rclcpp.hpp>       // 导入rclcpp库，这是C++的ROS2客户端库
+#include <std_msgs/msg/string.hpp> // 导入std_msgs消息库中的String消息类型
+
+using std::placeholders::_1; // 使用C++标准库中的placeholders命名空间，用于绑定回调函数
+
+// 定义一个SimpleSubscriber类，继承自rclcpp::Node类
+class SimpleSubscriber : public rclcpp::Node
+{
+public:
+    // 构造函数
+    SimpleSubscriber() : Node("simple_subscriber")
+    {
+        // 创建一个订阅者，订阅名为"chatter"的话题，消息类型为std_msgs::msg::String，队列长度为10
+        // 使用std::bind绑定回调函数msgCallback，_1代表传入回调函数的第一个参数（消息）
+        sub_ = create_subscription<std_msgs::msg::String>(
+            "chatter", 10, std::bind(&SimpleSubscriber::msgCallback, this, _1));
+    }
+
+private:
+    // 定义一个共享指针，用于存储订阅者的句柄
+    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr sub_;
+
+    // 定义一个msgCallback方法，用于处理接收到的消息
+    // const关键字表示这个方法不会修改类的成员变量
+    void msgCallback(const std_msgs::msg::String &msg) const
+    {
+        // 使用RCLCPP_INFO_STREAM宏打印接收到的消息内容
+        // this->get_logger()获取节点的日志记录器
+        // msg.data.c_str()将接收到的字符串消息转换为C风格字符串
+        RCLCPP_INFO_STREAM(this->get_logger(), "I heard: " << msg.data.c_str());
+    }
+};
+
+// 定义一个main函数，作为程序的入口点
+int main(int argc, char *argv[])
+{
+    // 初始化rclcpp库
+    rclcpp::init(argc, argv);
+    // 创建一个指向SimpleSubscriber类对象的新共享指针
+    auto node = std::make_shared<SimpleSubscriber>();
+    // 将node其传递给rclcpp::spin进入事件循环
+    rclcpp::spin(node);
+    // 关闭rclcpp库
+    rclcpp::shutdown();
+    // 程序正常退出
+    return 0;
+}
+```
+
+注意，``createSubscription()``是一个模板函数，需要在这个函数的尖括号中指明将用于消息交换的接口类型。该函数的输出保存在SimpleSubscriber类的一个新对象的私有变量中。该变量是一个类型为``rclcpp::Subscription``的对象，这也是一个模板类，需要在这个类的尖括号中指明将用于消息交换的接口类型。这里不会创建这种类型的实例，而是一个名为sub_的共享指针。
+
+在C++中，``std::bind``是一个函数适配器，它的主要作用是将一个可调用对象（如函数、函数对象、lambda表达式等）与其参数一起绑定，生成一个新的可调用对象，这个新的可调用对象可以带有预设的参数。在上面的代码中，``std::bind``用于绑定``SimpleSubscriber``类的成员函数``msgCallback``和类的实例（this指针），以及一个占位符``_1``，代表从话题中接收到的消息。这样，当消息到达时，``msgCallback``函数就会被调用，并且``this``指针指向正确的``SimpleSubscriber``实例，``_1``会被替换为实际接收到的消息。这是在C++中实现回调函数的常见做法。
+
+
 
