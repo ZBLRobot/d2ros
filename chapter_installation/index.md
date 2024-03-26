@@ -36,6 +36,34 @@ export LANG=en_US.UTF-8
 locale  # 确认设置
 ```
 
+ROS 2支持多种编程语言，最常用的是Python和C++。目前，ROS 2的绝大部分的功能均同时提供Python和C++接口，只有极少数功能只提供C++接口。建议安装conda来管理开发环境，它既能管理Python包，也能管理C++包。
+
+最简单的方法就是安装依赖Python 3.10的Miniconda（因为Ubuntu 22.04系统自带的Python版本为Python3.10，需要保持环境依赖的一致性）。如果已安装conda，则可以跳过以下步骤。
+
+首先安装C++编程环境：
+
+```bash
+sudo apt install build-essential
+sudo apt install cmake
+```
+
+访问清华源镜像网站（https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/），下载基于Python3.10的最新的Miniconda版本。
+
+```bash
+wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-py310_24.1.2-0-Linux-x86_64.sh
+sh Miniconda3-py310_24.1.2-0-Linux-x86_64.sh -b
+~/miniconda3/bin/conda init
+bash
+```
+
+更新一下conda和pip这两个命令行包管理器，并将pip的软件源更换为清华源。
+
+```bash
+conda update conda
+conda update pip
+pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+```
+
 ## 安装ROS 2 Humble
 
 需要将ROS 2的软件源添加到系统中。先确保Ubuntu Universe软件库已启用。
@@ -133,27 +161,6 @@ sudo apt install terminator
 
 **为开发做准备**
 
-ROS 2支持多种编程语言，最常用的是Python和C++。目前，ROS 2的绝大部分的功能均同时提供Python和C++接口，只有极少数功能只提供C++接口。建议安装conda来管理开发环境，它既能管理Python包，也能管理C++包。
-
-最简单的方法就是安装依赖Python 3.10的Miniconda（因为Ubuntu 22.04系统自带的Python版本为Python3.10，需要保持环境依赖的一致性）。如果已安装conda，则可以跳过以下步骤。
-
-访问清华源镜像网站（https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/），下载基于Python3.10的最新的Miniconda版本。
-
-```bash
-wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-py310_24.1.2-0-Linux-x86_64.sh
-sh Miniconda3-py310_24.1.2-0-Linux-x86_64.sh -b
-~/miniconda3/bin/conda init
-bash
-```
-
-更新一下conda和pip这两个命令行包管理器，并将pip的软件源更换为清华源。
-
-```bash
-conda update conda
-conda update pip
-pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
-```
-
 基于ROS 2编写的源代码，无论Python还是C++，都需要使用colcon构建工具进行编译打包。ROS 2默认是没有安装colcon的，需要手动安装，并配置环境变量。
 
 ```bash
@@ -165,7 +172,7 @@ echo "source /home/<current_user>/miniconda3/share/colcon_argcomplete/hook/colco
 
 注意，需要将上面命令行中的``<current_user>``更换为自己系统的当前用户名。
 
-开发环境对开发效率有很大的影响，我们推荐使用VSCode来做ROS 2开发。访问VSCode的官网（https://code.visualstudio.com/），下载合适的安装包进行安装。
+开发环境对开发效率有很大的影响，这里推荐使用VSCode来做ROS 2开发。访问VSCode的官网（https://code.visualstudio.com/），下载合适的安装包进行安装。
 
 打开VSCode，并安装如下扩展：
 
