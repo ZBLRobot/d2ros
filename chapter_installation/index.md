@@ -43,8 +43,9 @@ ROS 2支持多种编程语言，最常用的是Python和C++。目前，ROS 2的�
 首先安装C++编程环境：
 
 ```bash
+sudo apt install ssh vim
 sudo apt install build-essential
-sudo apt install cmake
+sudo apt install cmake git
 ```
 
 访问清华源镜像网站（https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/），下载基于Python3.10的最新的Miniconda版本。
@@ -62,6 +63,7 @@ bash
 conda update conda
 conda update pip
 pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+conda install conda-forge::libstdcxx-ng
 ```
 
 ## 安装ROS 2 Humble
@@ -185,10 +187,10 @@ echo "source /home/<current_user>/miniconda3/share/colcon_argcomplete/hook/colco
 
 如果使用本地安装的VSCode开发远端的ROS 2系统，则需要进行如下设置：
 
-1、在远端计算机上安装ssh服务
+1、在远端计算机上生成ssh密钥
 
 ```bash
-sudo apt install ssh
+ssh-keygen -t rsa
 ```
 
 2、在本地打开命令行窗口，并生成ssh密钥
