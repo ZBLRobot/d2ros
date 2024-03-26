@@ -205,51 +205,50 @@ average rate: 60.914
 
 **使用Python实现**
 
-导航到``~/ros2_ws/src``，利用之前创建的包``pkg_py_example``来实现相关功能：
+导航到``~/ros2_ws/src``，利用之前创建的包``pkg_py_example``来实现相关功能。
 
 按照惯例在每个ROS 2的Python包中使用与包同名的子目录，即：pkg_py_example子目录，来保存源代码，也就是将要创建的Python脚本。
 
 在该子目录中，创建一个名为simple_publisher.py的新文件。使用VSCode代开该文件，开始编写Python程序。
 
 ```python
-import rclpy                     # 用于与ROS 2核心进行交互的Python客户端库
-from rclpy.node import Node      # 节点父类
-from std_msgs.msg import String  # 发布标准的String数据  
+import rclpy  # 导入rclpy库，这是ROS2的Python客户端库
+from rclpy.node import Node  # 从rclpy.node模块导入Node类，用于创建节点
+from std_msgs.msg import String  # 从std_msgs.msg模块导入String消息类型
 
-
+# 定义一个SimplePublisher类，继承自Node类
 class SimplePublisher(Node):
-
-    def __init__(self):  # 构造函数，用于对象初始化
-        super().__init__("simple_publisher")                        # 定义节点名称
-        self.pub_ = self.create_publisher(String, "chatter", 10)    # 创建发布者，指定了消息类型、话题名称和缓冲区队列大小
-        self.counter_ = 0                     # 用于计算发布的消息数量
-        self.frequency_ = 1.0                 # 定义在主题中发布消息的频率，初始化为1Hz
-        self.get_logger().info("Publishing at %d Hz" % self.frequency_)  # 打印一条info级别的log信息
+    def __init__(self):
+        super().__init__("simple_publisher")  # 调用父类Node的构造函数，创建一个名为"simple_publisher"的节点
+        self.pub_ = self.create_publisher(String, "chatter", 10)  # 创建一个发布者，发布String类型的消息到"chatter"话题，消息队列长度为10
+        self.counter_ = 0  # 初始化计数器为0
+        self.frequency_ = 1.0  # 设置发布频率为1Hz
+        self.get_logger().info("Publishing at %d Hz" % self.frequency_)  # 输出日志信息，表示发布频率
         
-        self.timer_ = self.create_timer(self.frequency_, self.timerCallback)  # 创建一个新的计时器对象，该计时器以指定的频率重复执行一个特定函数
+        self.timer_ = self.create_timer(self.frequency_, self.timerCallback)  # 创建一个定时器，每隔1秒调用一次timerCallback函数
 
-    def timerCallback(self):  # 计时器回调函数，目标是每次执行时在chatter话题中发布一条新消息
-        msg = String()              # 分配一个字符串变量
-        msg.data = "Hello ROS 2 - counter: %d" % self.counter_  # 构造要发布的字符串
-        self.pub_.publish(msg)      # 发布消息
-        self.counter_ += 1          # 发布消息后计数器加1
+    def timerCallback(self):
+        msg = String()  # 创建一个String类型的消息对象
+        msg.data = "Hello ROS 2 - counter: %d" % self.counter_  # 设置消息内容为"Hello ROS 2 - counter: "加上计数器的值
+        self.pub_.publish(msg)  # 发布消息
+        self.counter_ += 1  # 计数器递增
 
-
-def main():          # 主函数
-    rclpy.init()     # 使用rclpy库初始化ROS2接口，并使用它的init函数
-
-    simple_publisher = SimplePublisher()  # 创建一个SimplePublisher类的新对象
-    rclpy.spin(simple_publisher)          # 使用rclpy库中定义的spin函数，保持这个节点运行，从而保持定时器和发布者持续活动
+# 定义main函数，程序的入口点
+def main():
+    rclpy.init()  # 初始化rclpy库
     
-    simple_publisher.destroy_node()  # 当在终端中按Ctrl+C终止这个节点的执行时，还需要确保simple_publisher节点被正确销毁
-    rclpy.shutdown()  # 关闭ROS2接口
+    simple_publisher = SimplePublisher()  # 创建SimplePublisher类的实例
+    rclpy.spin(simple_publisher)  # 进入事件循环，等待回调函数执行
+    
+    simple_publisher.destroy_node()  # 销毁节点
+    rclpy.shutdown()  # 关闭rclpy库
 
-
-if __name__ == '__main__':  # 可执行程序的入口函数
-    main()  # 调用主函数
+# 判断当前文件是否作为主程序运行，如果是，则执行main函数
+if __name__ == '__main__':
+    main()
 ```
 
-保存上述脚本后，为了执行这个节点，首先需要告诉编译器如何构建该脚本，以便将其变成ROS 2中的可执行文件。
+保存上述脚本后，为了运行，首先需要告诉编译器如何构建该脚本，以便将其变成ROS 2中的可执行文件。
 
 打开包``pkg_py_example``根目录中的setup.py文件，该文件可以被看作是一张指令表，告诉编译器如何将Python脚本转换成可执行文件。为此，编辑该文件，在entry_points（入口点）中的console_scripts（控制台脚本）列表中，添加一个名为simple_publisher的新的可执行文件，并保存。具体如下所示：
 
@@ -276,16 +275,184 @@ if __name__ == '__main__':  # 可执行程序的入口函数
 colcon build
 ```
 
-在执行新节点之前，首先需要source当前工作空间：
+在运行新节点的可执行程序之前，首先需要source当前工作空间：
 
 ```bash
 . install/setup.bash
 ```
 
-运行节点：
+运行节点中的可执行程序：
 
 ```bash
 ros2 run pkg_py_example simple_publisher
 ```
 
+打开一个新的终端，运行：
+
+```bash
+ros2 topic echo /chatter
+```
+
+可以看到
+
+```
+data: 'Hello ROS 2 - counter: 31'
+---
+data: 'Hello ROS 2 - counter: 32'
+---
+data: 'Hello ROS 2 - counter: 33'
+```
+
+话题收到了发布者发布的消息。
+
+可以尝试使用命令行工具来获得有关这个新建话题更多的信息。
+
+```bash
+ros2 topic info /chatter --verbose
+ros2 topic hz /chatter
+```
+
+这里使用verbose标志可以获取此话题的完整概览。
+
+**使用C++实现**
+
+导航到``~/ros2_ws/src``，利用之前创建的包``pkg_cpp_example``来实现相关功能。
+
+按照惯例，ROS 2的C++包中，C++的函数和类的声明头文件位于include目录中与包同名的子目录中。C++源文件，即实现函数和类的行为的C++代码位于src目录中。
+
+在src目录中，新建一个名为simple_publisher.cpp的文件，添加如下内容，并保存。
+
+```cpp
+#include <rclcpp/rclcpp.hpp>  // 引入ROS2客户端库的核心头文件
+#include <std_msgs/msg/string.hpp>  // 引入标准消息包std_msgs中String消息类型的头文件
+
+#include <chrono>  // 引入chrono库，用于处理时间相关的功能
+
+using namespace std::chrono_literals;  // 允许使用后缀"s"来表示秒
+
+// 定义一个SimplePublisher类，继承自rclcpp::Node
+class SimplePublisher : public rclcpp::Node
+{
+public:
+  SimplePublisher() : Node("simple_publisher"), counter_(0)  // 构造函数，初始化节点名称和计数器
+  {
+    // 创建一个发布者，发布std_msgs::msg::String类型的消息到"chatter"话题，消息队列长度为10
+    pub_ = create_publisher<std_msgs::msg::String>("chatter", 10);
+    // 创建一个定时器，每秒调用一次timerCallback函数
+    timer_ = create_wall_timer(1s, std::bind(&SimplePublisher::timerCallback, this));
+    // 输出日志信息，表示发布频率为1Hz
+    RCLCPP_INFO(get_logger(), "Publishing at 1 Hz");
+  }
+
+  // 定时器回调函数，当定时器触发时调用
+  void timerCallback()
+  {
+    auto message = std_msgs::msg::String();  // 创建一个String类型的消息
+    // 设置消息内容为"Hello ROS 2 - counter:"加上计数器的值，并将计数器递增
+    message.data = "Hello ROS 2 - counter:" + std::to_string(counter_++);
+    // 发布消息
+    pub_->publish(message);
+  }
+
+private:
+  // 创建一个std_msgs::msg::String类型的发布者共享指针
+  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr pub_;
+  // 创建一个定时器共享指针
+  rclcpp::TimerBase::SharedPtr timer_;
+  // 创建一个无符号整型计数器
+  unsigned int counter_;
+};
+
+// main函数，程序的入口点
+int main(int argc, char* argv[])
+{
+  // 初始化ROS2客户端库
+  rclcpp::init(argc, argv);
+  // 创建SimplePublisher节点的一个共享指针实例
+  auto node = std::make_shared<SimplePublisher>();
+  // 进入事件循环，等待回调函数执行
+  rclcpp::spin(node);
+  // 关闭ROS2客户端库
+  rclcpp::shutdown();
+  // 返回0，表示程序正常退出
+  return 0;
+}
+```
+
+在运行上述代码之前，首先需要告诉编译器如何构建代码，并将其变成ROS 2的可执行文件。打开包目录下的CMakeLists.txt文件，为了便于阅读该文件，可以先删除文件中的所有注释。可以将这个文件视为一个指令表，用于告诉编译器如何将C++代码编译成可执行文件。
+
+这里，需要声明代码中引入的依赖关系，即代码中使用的包，比如rclcpp和std_msgs，需要在这里声明它们的使用。在已有的find_package行下面添加如下两行：
+
+```cmake
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+```
+
+在正确声明了所有的依赖项后，可以继续添加可执行文件的定义。这里添加名为simple_publisher的可执行文件，由src/simple_publisher.cpp源代码编译生成。此处还需要为simple_publisher目标添加依赖，确保在构建时链接到rclcpp和std_msgs。
+
+```cmake
+add_executable(simple_publisher src/simple_publisher.cpp)
+ament_target_dependencies(simple_publisher rclcpp std_msgs)
+```
+
+正确编译生成可执行文件后，还需要正确进行安装。这里设置将其安装到lib文件夹中的一个与包同名的子文件夹中。在CMakeLists.txt文件中，``${PROJECT_NAME}``变量可以用于表示包名。具体如下：
+
+```cmake
+install(TARGETS
+  simple_publisher
+  DESTINATION lib/${PROJECT_NAME}
+)
+```
+
+最后，还需要在package.xml中再次声明依赖关系。在``<test_depend>``之前添加如下内容并保存：
+
+```xml
+  <depend>rclcpp</depend>
+  <depend>std_msgs</depend>
+```
+
+现在可以构建工作空间并执行新建的节点了。
+
+打开一个新的终端，进入工作空间，运行：
+
+```bash
+colcon build
+```
+
+在运行新节点的可执行程序之前，首先需要source当前工作空间：
+
+```bash
+. install/setup.bash
+```
+
+运行节点中的可执行程序：
+
+```bash
+ros2 run pkg_cpp_example simple_publisher
+```
+
+打开一个新的终端，运行：
+
+```bash
+ros2 topic echo /chatter
+```
+
+可以看到
+
+```
+data: 'Hello ROS 2 - counter: 31'
+---
+data: 'Hello ROS 2 - counter: 32'
+---
+data: 'Hello ROS 2 - counter: 33'
+```
+
+话题收到了发布者发布的消息。
+
+可以尝试使用命令行工具来获得有关这个新建话题更多的信息。
+
+```bash
+ros2 topic info /chatter --verbose
+ros2 topic hz /chatter
+```
 

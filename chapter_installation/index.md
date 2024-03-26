@@ -40,12 +40,10 @@ ROS 2支持多种编程语言，最常用的是Python和C++。目前，ROS 2的�
 
 最简单的方法就是安装依赖Python 3.10的Miniconda（因为Ubuntu 22.04系统自带的Python版本为Python3.10，需要保持环境依赖的一致性）。如果已安装conda，则可以跳过以下步骤。
 
-首先安装C++编程环境：
+首先安装系统常用包：
 
 ```bash
-sudo apt install ssh vim
-sudo apt install build-essential
-sudo apt install cmake git
+sudo apt install ssh vim git
 ```
 
 访问清华源镜像网站（https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/），下载基于Python3.10的最新的Miniconda版本。
@@ -63,6 +61,14 @@ bash
 conda update conda
 conda update pip
 pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+```
+
+安装C++开发环境。
+
+```bash
+conda install conda-forge::gcc=11
+conda install conda-forge::gxx=11
+conda install conda-forge::cmake
 conda install conda-forge::libstdcxx-ng
 ```
 
