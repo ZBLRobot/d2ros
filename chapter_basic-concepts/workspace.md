@@ -27,6 +27,7 @@ colcon build
 如前所述，包应放在工作区的src子目录内。所以让我们导航到src目录，并在该目录内创建一个新的包。可以使用命令ros2 package create，后跟用于创建包所需的构建工具参数，来生成一个空的包。
 
 ```bash
+cd src
 # 创建一个Python包
 ros2 pkg create --build-type ament_python pkg_py_example
 # 创建一个C++包

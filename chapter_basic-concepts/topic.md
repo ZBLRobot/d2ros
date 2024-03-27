@@ -688,3 +688,173 @@ ros2 run pkg_py_example simple_publisher
 ```
 
 可以看到，simple_subscriber运行的终端打印出了它收到的所有消息，再一次验证了使用不同编程语言开发的执行不同操作的节点之间的通信能力。
+
+## 接口与自定义消息
+
+ROS应用程序主要通过三种类型的接口进行通信：话题、服务或动作。ROS 2使用一种简化的描述语言————接口定义语言（IDL）来描述这些接口。这种描述方式使得ROS工具能够轻松地为多种编程语言自动生成对应的接口源代码。
+
+消息是话题通信机制中传递的数据，在ROS软件包的msg/目录下的.msg文件中进行描述和定义。.msg文件包含两部分内容：字段和常量。
+
+每个字段包含一个类型和一个名称，两者之间由空格分隔，例如：
+
+```
+int32 my_int
+string my_string
+```
+
+字段类型包括：
+
+  * 内置类型
+  * 自定义的消息描述名称，例如：“geometry_msgs/PoseStamped”
+
+目前支持的内置类型有：
+
+  * 布尔：bool
+  * 字节：byte
+  * 字符：char
+  * 32位浮点数：float32
+  * 64位浮点数：float64
+  * 8位整数：int8
+  * 8位无符号整数：uint8
+  * 16位整数：int16
+  * 16位无符号整数：uint16
+  * 32位整数：int32
+  * 32位无符号整数：uint32
+  * 64位整数：int64
+  * 64位无符号整数：uint64
+  * 字符串：string
+  * 宽字符串：wstring
+
+每个内置类型都可以用于定义数组，ROS支持定义多种类型的数组：
+
+  * 静态数组：static array
+  * 无边界动态数组：unbounded dynamic array
+  * 有边界动态数组：bounded dynamic array
+  * 有边界字符串数组：bounded string
+
+对于那些在ROS定义中更为宽松的类型，将通过软件实施ROS在范围和长度上的限制。
+
+使用数组和有界类型定义消息的例子：
+
+```
+int32[] unbounded_integer_array
+int32[5] five_integers_array
+int32[<=5] up_to_five_integers_array
+
+string string_of_unbounded_size
+string<=10 up_to_ten_characters_string
+
+string[<=5] up_to_five_unbounded_strings
+string<=10[] unbounded_array_of_strings_up_to_ten_characters_each
+string<=10[<=5] up_to_five_strings_up_to_ten_characters_each
+```
+
+字段名称应由小写字母和数字组成，使用下划线分隔单词。名称必须以字母开头，且不能以下划线结束，也不得包含连续的下划线。
+
+可以为消息类型的任意字段设置默认值。目前，字符串数组和非内置的复杂类型（即上表中未列出的类型；这适用于所有嵌套消息）不支持设置默认值。
+
+定义默认值的方法是在字段定义行的末尾添加第三个元素，例如：
+
+```
+uint8 x 42
+int16 y -2000
+string full_name "John Doe"
+int32[] samples [-200, -100, 0, 100, 200]
+```
+
+注意，字符串的值需要用单引号’或双引号"括起来进行定义。目前，字符串的值不会被转义处理。
+
+常量定义类似于具有默认值的字段描述，但这个值一旦设定便不能通过编程更改。常量的赋值是通过使用等号‘=’来表示的，例如：
+
+```
+int32 X=123
+int32 Y=-123
+string FOO="foo"
+string EXAMPLE='bar'
+```
+
+注意，常量名称必须大写。
+
+**编程实现自定义消息**
+
+在编写自定义消息之前，首先查看已经安装的常用接口：
+
+```bash
+ros2 interface list
+```
+
+对于某一个接口，也可以通过命令行查看其具体定义。例如要查看消息geometry_msgs/msg/Point的定义，可以运行：
+
+```bash
+ros2 interface show geometry_msgs/msg/Point
+```
+
+上述命令将返回如下信息：
+
+```
+# This contains the position of a point in free space
+float64 x
+float64 y
+float64 z
+```
+
+尽量使用系统提供的常用接口，不要重复定义接口。
+
+接口定义规范了相互通信的多个ROS 2进程所交换数据的类型，因此会被工作空间中的多个相互通信的包所共同依赖。为了管理这样的依赖关系，通常会单独创建一个包，将接口独立进行定义和生成，而不将其放入具体使用这个接口的某个包中。
+
+在ROS 2中，自定义消息的生成仍然依赖于CMake和ament_cmake，因为消息的生成涉及到从.msg文件生成C++和Python代码。下面，使用命令行工具创建一个名为pkg_interfaces的包，专门用于定义接口。
+
+```bash
+cd ~/ros2_ws/src
+ros2 pkg create --build-type ament_cmake pkg_interfaces
+```
+
+进入新建的包，并在其中创建msg子目录。由于该包仅用于定义接口，而不实现任何其它功能，可以删除自动创建的include和src目录。
+
+```bash
+cd pkg_interfaces
+mkdir msg
+rm -rf include
+rm -rf src
+```
+
+在msg子目录中创建一个名为TargetCoordinates.msg的文件，并在其中添加如下内容：
+
+```
+string name
+geometry_msgs/Point coordinates
+```
+
+由于自定义消息依赖了geometry_msgs包，需要在package.xml文件中添加这一依赖。打开该文件，在``<test_depend>``上方添加：
+
+```xml
+<depend>geometry_msgs</depend>
+```
+
+为了能够根据定义自动生成接口程序，还需要继续添加如下内容：
+
+```xml
+<build_depend>rosidl_default_generators</build_depend>
+<exec_depend>rosidl_default_runtime</exec_depend>
+<member_of_group>rosidl_interface_packages</member_of_group>
+```
+
+为了正确编译，还需要编辑CMakeLists.txt文件。打开该文件，删除BUILD_TESTING部分和所有注释。在``find_package``之后添加如下内容：
+
+```cmake
+find_package(geometry_msgs REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "msg/TargetCoordinates.msg"
+  DEPENDENCIES geometry_msgs
+)
+ament_export_dependencies(rosidl_default_runtime)
+```
+
+现在可以构建工作空间了。当构成功建工作空间，并source当前工作空间后，再次运行：
+
+```bash
+ros2 interface list
+```
+
+可以发现，自定义的``pkg_interfaces/msg/TargetCoordinates``消息出现在接口列表中。
