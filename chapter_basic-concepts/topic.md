@@ -506,7 +506,7 @@ if __name__ == '__main__':
     },
 ```
 
-由于没有增加额外的依赖项，因此这里不需要修改package.xml文件。
+由于没有增加额外的依赖项，这里不需要修改package.xml文件。
 
 现在可以构建工作空间并执行新建的节点了。
 
@@ -618,5 +618,73 @@ int main(int argc, char *argv[])
 
 在C++中，``std::bind``是一个函数适配器，它的主要作用是将一个可调用对象（如函数、函数对象、lambda表达式等）与其参数一起绑定，生成一个新的可调用对象，这个新的可调用对象可以带有预设的参数。在上面的代码中，``std::bind``用于绑定``SimpleSubscriber``类的成员函数``msgCallback``和类的实例（this指针），以及一个占位符``_1``，代表从话题中接收到的消息。这样，当消息到达时，``msgCallback``函数就会被调用，并且``this``指针指向正确的``SimpleSubscriber``实例，``_1``会被替换为实际接收到的消息。这是在C++中实现回调函数的常见做法。
 
+接下来需要告诉编译器如何构建这个文件并将其变成在ROS 2中可执行的文件。为此，需要修改CMakeLists.txt文件，并在其中添加如下内容：
 
+```cmake
+add_executable(simple_subscriber src/simple_subscriber.cpp)
+ament_target_dependencies(simple_subscriber rclcpp std_msgs)
+```
 
+告诉编译器编译目标为名为simple_subscriber的可执行文件，使用源文件src/simple_subscriber.cpp，且编译时需要链接rclcpp和std_msgs这两个依赖库。
+
+最后，还需要其添加安装配置中，以便其能够被安装到正确的位置：
+
+```cmake
+install(TARGETS
+  simple_publisher
+  simple_subscriber
+  DESTINATION lib/${PROJECT_NAME}
+)
+```
+
+由于没有增加额外的依赖项，这里不需要修改package.xml文件。
+
+现在可以构建工作空间并执行新建的节点了。
+
+打开一个新的终端，进入工作空间，运行：
+
+```bash
+colcon build
+```
+
+在运行新节点的可执行程序之前，首先需要source当前工作空间：
+
+```bash
+. install/setup.bash
+```
+
+运行节点中的可执行程序：
+
+```bash
+ros2 run pkg_cpp_example simple_subscriber
+```
+
+此时，终端中并没有任何输出。
+
+打开一个新的终端，运行：
+
+```bash
+ros2 topic list
+```
+
+可以看到``/chatter``话题是存在的。
+
+如果手动向这个话题发布数据：
+
+```bash
+ros2 topic pub /chatter std_msgs/msg/String "data: 'Hello ROS 2'"
+```
+
+可以看到当前终端正在以1Hz，向``/chatter``话题发送字符串。
+
+切换回运行simple_subscriber的终端，可以看到该终端正在以1Hz，输出收到的字符串消息。
+
+保持simple_subscriber运行，停止手动话题的发送。
+
+打开一个新的终端，并source当前工作空间，运行Python实现的发布者程序。
+
+```bash
+ros2 run pkg_py_example simple_publisher
+```
+
+可以看到，simple_subscriber运行的终端打印出了它收到的所有消息，再一次验证了使用不同编程语言开发的执行不同操作的节点之间的通信能力。
