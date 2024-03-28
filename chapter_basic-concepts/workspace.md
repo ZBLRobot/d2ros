@@ -249,3 +249,5 @@ def generate_launch_description():
 ```
 
 上面的启动文件是用Python编写的，但也可以使用XML和YAML来创建启动文件。该启动文件同时启动了两个turtlesim节点。
+
+launch文件位于每个ROS包的launch子目录下。
