@@ -53,9 +53,11 @@ sudo apt install build-essential cmake
 最后安装Python开发环境：
 
 ```bash
+sudo apt install python3-dev
 sudo apt install python3-pip
 pip install pip --upgrade
 pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+pip config set global.trusted-host pypi.tuna.tsinghua.edu.cn
 ```
 
 ## 安装ROS 2 Humble
@@ -70,7 +72,6 @@ sudo add-apt-repository universe
 然后使用apt添加ROS 2的GPG密钥。
 
 ```bash
-sudo apt install curl
 sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
 ```
 
@@ -99,7 +100,25 @@ ROS 2提供了多种软件包的安装组合，包括：
 ```bash
 sudo apt install ros-humble-desktop
 # sudo apt install ros-humble-ros-base
-# sudo apt install ros-dev-tools
+sudo apt install ros-dev-tools
+```
+
+如果要进行仿真模拟，还需要安装Gazebo：
+
+```bash
+sudo apt install gazebo
+sudo apt install ros-humble-gazebo-*
+```
+
+配置rosdep依赖管理工具：
+
+```bash
+sudo mkdir -p /etc/ros/rosdep/sources.list.d/
+sudo curl -o /etc/ros/rosdep/sources.list.d/20-default.list https://mirrors.tuna.tsinghua.edu.cn/github-raw/ros/rosdistro/master/rosdep/sources.list.d/20-default.list
+
+echo 'export ROSDISTRO_INDEX_URL=https://mirrors.tuna.tsinghua.edu.cn/rosdistro/index-v4.yaml' >> ~/.bashrc
+bash
+rosdep update
 ```
 
 ROS 2依赖于使用shell环境组合的工作空间（workspace）。“工作空间”是ROS术语，指用于组织、构建和管理ROS软件包的目录结构。工作空间允许开发者创建一个独立的环境来开发和测试ROS应用程序。ROS2的核心工作空间称为底层（underlay），后续的本地工作空间称为叠加层（overlays）。当使用ROS 2进行开发时，通常会同时有几个工作空间处于活动状态。
@@ -124,6 +143,8 @@ bash
 ```bash
 printenv | grep -i ROS
 ```
+
+
 
 ## 安装后的额外步骤
 
