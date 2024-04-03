@@ -108,6 +108,7 @@ sudo apt install ros-dev-tools
 ```bash
 sudo apt install gazebo
 sudo apt install ros-humble-gazebo-*
+sudo apt install ros-humble-ros-gz
 ```
 
 配置rosdep依赖管理工具：
