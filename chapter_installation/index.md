@@ -55,6 +55,7 @@ sudo apt install build-essential cmake
 ```bash
 sudo apt install python3-dev
 sudo apt install python3-pip
+echo 'PATH="$HOME/.local/bin:$PATH"' >>~/.bashrc
 pip install pip --upgrade
 pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 pip config set global.trusted-host pypi.tuna.tsinghua.edu.cn
@@ -103,25 +104,6 @@ sudo apt install ros-humble-desktop
 sudo apt install ros-dev-tools
 ```
 
-如果要进行仿真模拟，还需要安装Gazebo：
-
-```bash
-sudo apt install gazebo
-sudo apt install ros-humble-gazebo-*
-sudo apt install ros-humble-ros-gz
-```
-
-配置rosdep依赖管理工具：
-
-```bash
-sudo mkdir -p /etc/ros/rosdep/sources.list.d/
-sudo curl -o /etc/ros/rosdep/sources.list.d/20-default.list https://mirrors.tuna.tsinghua.edu.cn/github-raw/ros/rosdistro/master/rosdep/sources.list.d/20-default.list
-
-echo 'export ROSDISTRO_INDEX_URL=https://mirrors.tuna.tsinghua.edu.cn/rosdistro/index-v4.yaml' >> ~/.bashrc
-bash
-rosdep update
-```
-
 ROS 2依赖于使用shell环境组合的工作空间（workspace）。“工作空间”是ROS术语，指用于组织、构建和管理ROS软件包的目录结构。工作空间允许开发者创建一个独立的环境来开发和测试ROS应用程序。ROS2的核心工作空间称为底层（underlay），后续的本地工作空间称为叠加层（overlays）。当使用ROS 2进行开发时，通常会同时有几个工作空间处于活动状态。
 
 组合工作空间可以更容易地针对不同版本的ROS 2或针对不同的软件包组合进行开发。通常，需要先source安装的ROS 2，加载底层，然后再source特定包的叠加层。注意，如果不source安装的ROS 2，则无法访问ros2命令，也无法找到或使用ROS 2软件包。换句话说，您将无法使用ROS 2。
@@ -145,7 +127,16 @@ bash
 printenv | grep -i ROS
 ```
 
+配置rosdep依赖管理工具：
 
+```bash
+sudo mkdir -p /etc/ros/rosdep/sources.list.d/
+sudo curl -o /etc/ros/rosdep/sources.list.d/20-default.list https://mirrors.tuna.tsinghua.edu.cn/github-raw/ros/rosdistro/master/rosdep/sources.list.d/20-default.list
+
+echo 'export ROSDISTRO_INDEX_URL=https://mirrors.tuna.tsinghua.edu.cn/rosdistro/index-v4.yaml' >> ~/.bashrc
+bash
+rosdep update
+```
 
 ## 安装后的额外步骤
 
